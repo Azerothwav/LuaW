@@ -2,6 +2,9 @@ local config = {
 	host = "0.0.0.0",
 	port = 8080,
 	debug = false,
+	jwt_secret = function()
+		return os.getenv("JWT_SECRET") or "fallback-secret"
+	end,
 }
 
 local function parse_args()
@@ -20,6 +23,8 @@ local function parse_args()
 			print("  --debug        Debug mode")
 			print("  --help         Show help")
 			os.exit(0)
+		elseif arg == "--routes" then
+			require("handlers.router").show_routes()
 		end
 	end
 end
@@ -35,4 +40,5 @@ return {
 	debug = function()
 		return config.debug
 	end,
+	jwt_secret = config.jwt_secret,
 }

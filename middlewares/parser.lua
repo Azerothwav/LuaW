@@ -1,6 +1,7 @@
 local url = require("socket.url")
 local parserUtil = require("utils.parser")
 local copas = require("copas")
+local json = require("libs.json")
 
 local parser = {}
 
@@ -26,8 +27,12 @@ parser.request = function(client)
 		params = parserUtil.query(parsed_url.query)
 	elseif method == "POST" then
 		body = parserUtil.read_post_body(client, headers)
-		if headers["content-type"] and headers["content-type"]:find("application/x-www-form-urlencoded") then
-			params = parserUtil.query(body)
+		if headers["content-type"] and string.len(body) > 0 then
+			if headers["content-type"]:find("application/x-www-form-urlencoded") then
+				params = parserUtil.query(body)
+			elseif headers["content-type"]:find("application/json") then
+				params = json.decode(body)
+			end
 		end
 	end
 
