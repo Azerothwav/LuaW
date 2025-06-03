@@ -40,12 +40,23 @@ files.remove = function(filename)
   return true
 end
 
-files.list = function()
-  local list_str = ""
-  for dir in io.popen("ls -pa " .. config.files_path .. " | grep -v /"):lines() do
-    list_str = list_str .. dir .. "\n"
+files.list = function(text)
+  if text then
+    local list_str = ""
+    for dir in io.popen("ls -pa " .. config.files_path .. " | grep -v /"):lines() do
+      list_str = list_str .. dir .. "\n"
+    end
+    return list_str
+  else
+    local files_list = {}
+    for dir in io.popen("ls -pa " .. config.files_path .. " | grep -v /"):lines() do
+      table.insert(files_list, {
+        file_name = dir,
+        file_path = config.files_path .. "/" .. dir
+      })
+    end
+    return files_list
   end
-  return list_str
 end
 
 return files

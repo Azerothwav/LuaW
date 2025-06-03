@@ -50,7 +50,8 @@ router.add_route("GET", "/files", function(client)
     parser.json_response(200, {
       status = "sucess",
       code = 200,
-      message = "Files on server : " .. files.list(),
+      message = "Files on server : " .. files.list(true),
+      files = json.encode(files.list(false)),
       timestamp = os.time(),
     })
   )
