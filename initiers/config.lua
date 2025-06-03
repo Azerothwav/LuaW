@@ -5,7 +5,7 @@ local config = {
   jwt_secret = function()
     return os.getenv("JWT_SECRET") or "fallback-secret"
   end,
-  files_path = "/home/azeroth/Documents/LuaW/files"
+  files_path = "" -- Example : /home/azeroth/Documents/LuaW/uploads
 }
 
 local function parse_args()
