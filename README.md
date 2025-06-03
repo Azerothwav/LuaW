@@ -13,6 +13,8 @@ A lightweight HTTP server implementation in Lua inspired by Deno's simplicity, u
 - Modular structure (controllers, middlewares, libs)
 - Easy error handling
 - Configuration via command line arguments
+- Dynamic route pattern support (e.g. /test/:file_name)
+- Local file storage support
 
 ## Prerequisites
 
@@ -35,24 +37,28 @@ cd lua-minimal-backend
 ## Project structure
 ```bash
 .
-├── main.lua # Entry point
+├── uploads/ # Upload folder
 ├── inits/ # Initialization files
 │ ├── config.lua # Configuration loader
 │ └── server.lua # Server setup
 ├── libs/ # Utility libraries
 │ ├── json.lua # JSON handling
-│ ├── jwt.lua # JWT utilities
-│ └── utils.lua # Common utilities
+│ └── jwt.lua # JWT utilities
+├── utils/ # Common utilities
+│ ├── file.lua # File utility
+│ └── parser.lua # Parser utility
 ├── handlers/ # Request handlers
 │ ├── router.lua # Route dispatcher
 │ └── error_handlers.lua # Error responses
 ├── controllers/ # Business logic
-│ ├── test.lua # Example controller
-│ └── auth.lua # Authentication controller
-└── middlewares/ # Middleware functions
-├── logger.lua # Request logging
-├── parser.lua # Request parsing
-└── auth.lua # JWT verification middleware
+│ ├── file.lua # File example controller
+│ ├── test.lua # Route example controller
+│ └── auth.lua # Authentication example controller
+├── middlewares/ # Middleware functions
+│ ├── logger.lua # Request logging
+│ ├── parser.lua # Request parsing
+│ └── auth.lua # JWT verification middleware
+├── main.lua # Entry point
 ```
 ## Getting Started
 
@@ -86,6 +92,18 @@ curl -X POST -H "Content-Type: application/json" -d '{"username":"admin","passwo
 
 # Access protected route
 curl -H "Authorization: Bearer YOUR_TOKEN" http://localhost:8080/auth
+```
+
+### Dynamic Route Patterns
+
+You can now define routes with dynamic segments like /files/:file_name or /users/:id.
+
+In your controller, dynamic parameters are automatically passed into the request context, e.g.:
+
+```lua
+router.add_route("GET", "/file/:file_name", function(client, request)
+  local file_name = request.params.file_name
+end)
 ```
 
 ## Inspiration
