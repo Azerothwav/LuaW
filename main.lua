@@ -6,6 +6,7 @@ local logger = require("middlewares.logger")
 
 require("controllers.test")
 require("controllers.auth")
+require("controllers.file")
 
 config.parse_args()
 logger.init()
