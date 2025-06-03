@@ -78,7 +78,9 @@ router.handle = function(client)
     return
   end
 
-  logger.request(request.method, request.path)
+  local ip, port = client:getpeername()
+
+  logger.request(request.method, request.path, ip, port)
 
   local route_match = find_matching_route(request.method, request.path)
   if not route_match then
