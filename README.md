@@ -15,6 +15,7 @@ A lightweight HTTP server implementation in Lua inspired by Deno's simplicity, u
 - Configuration via command line arguments
 - Dynamic route pattern support (e.g. /test/:file_name)
 - Local file storage support
+- Distributed worker system
 
 ## Prerequisites
 
@@ -30,8 +31,8 @@ luarocks install luasec # For JWT support
 
 ## Clone the repository
 ```bash
-git clone https://github.com/yourusername/lua-minimal-backend.git
-cd lua-minimal-backend
+git clone https://github.com/Azerothwav/LuaW.git
+cd LuaW
 ```
 
 ## Project structure
@@ -58,13 +59,13 @@ cd lua-minimal-backend
 │ ├── logger.lua # Request logging
 │ ├── parser.lua # Request parsing
 │ └── auth.lua # JWT verification middleware
-├── main.lua # Entry point
+├── luaw.lua # Entry point
 ```
 ## Getting Started
 
 Starting a server with default setting :
 ```bash
-lua main.lua
+lua luaw.lua
 ```
 
 Available options:
@@ -75,7 +76,7 @@ Available options:
 
 Exemple :
 ```bash
-lua main.lua --server=0.0.0.0 --port=8080 --debug=true
+lua luaw.lua --server=0.0.0.0 --port=8080 --debug=true
 ```
 
 ### Testing your server
@@ -105,6 +106,59 @@ router.add_route("GET", "/file/:file_name", function(client, request)
   local file_name = request.params.file_name
 end)
 ```
+
+### Worker System
+
+LuaW now supports a distributed worker system, allowing the main server to offload certain tasks to secondary servers called workers.
+
+#### Starting a Worker
+
+To launch a server in worker mode, use the following command:
+
+```bash
+lua luaw.lua --worker_mode=true --worker_host=127.0.0.1 --worker_port=8080
+```
+
+Available options:
+
+- --worker_mode=true: Enables worker mode.
+- --worker_host: The IP address of the main server to connect to.
+- --worker_port: The port of the main server.
+
+Once connected, the main server will automatically delegate tasks to the available workers.
+
+#### Creating a Task
+
+The workers.manager module allows you to define and send tasks to workers. A task includes:
+
+- A main function executed on the worker.
+- A callback function executed on the main server after the task completes.
+
+Example:
+```lua
+local manager = require('workers.manager')
+
+manager.add_task(function()
+  local config = require('initiers.config')
+  print('This is a task executed on ' .. config.host())
+end, function()
+  local config = require('initiers.config')
+  print('This is an end task callback executed on ' .. config.host())
+end)
+```
+
+The first function runs on the worker.
+The second function is called on the main server with the result of the first function after execution.
+
+#### Benefits
+
+- Prevents the main server from being overloaded by heavy or non-urgent tasks.
+- Enables background processing.
+- Easily scalable by adding multiple workers.
+
+#### Example Usage
+
+You can find a usage example of this worker system in: `controllers/worker.lua`.
 
 ## Inspiration
 
