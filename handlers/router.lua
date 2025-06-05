@@ -93,6 +93,11 @@ router.handle = function(client)
     request.params[k] = v
   end
 
+  request.infos = {
+    ip = ip,
+    port = port
+  }
+
   for _, handler in ipairs(route_match.handlers) do
     local have_succeeded, route_error = handler(client, request)
     if have_succeeded ~= nil and not have_succeeded then

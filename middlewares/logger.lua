@@ -11,6 +11,10 @@ logger.info = function(message)
   print(string.format("[%s] INFO: %s", os.date("%Y-%m-%d %H:%M:%S"), message))
 end
 
+logger.warn = function(message)
+  print(string.format("[%s] WARN: %s", os.date("%Y-%m-%d %H:%M:%S"), message))
+end
+
 logger.error = function(message)
   io.stderr:write(string.format("[%s] ERROR: %s\n", os.date("%Y-%m-%d %H:%M:%S"), message))
 end

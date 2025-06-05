@@ -83,7 +83,6 @@ parsers.read_post_body = function(client, headers)
   return table.concat(body_chunks)
 end
 
-
 parsers.parse_multipart = function(body, boundary)
   local params           = {}
   local files            = {}
