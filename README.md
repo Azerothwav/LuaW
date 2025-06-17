@@ -16,6 +16,7 @@ A lightweight HTTP server implementation in Lua inspired by Deno's simplicity, u
 - Dynamic route pattern support (e.g. /test/:file_name)
 - Local file storage support
 - Distributed worker system
+- Cron jobs system
 
 ## Prerequisites
 
@@ -39,16 +40,20 @@ cd LuaW
 ```bash
 .
 ├── uploads/ # Upload folder
+├── cron_tasks/ # Cron tasks folder
 ├── inits/ # Initialization files
 │ ├── config.lua # Configuration loader
 │ └── server.lua # Server setup
 ├── libs/ # Utility libraries
+│ ├── date.lua # Date utilities
 │ ├── json.lua # JSON handling
 │ └── jwt.lua # JWT utilities
 ├── utils/ # Common utilities
+│ ├── cron.lua # Cron job utility
 │ ├── file.lua # File utility
 │ └── parser.lua # Parser utility
 ├── handlers/ # Request handlers
+| ├── cron.lua # Cron manager
 │ ├── router.lua # Route dispatcher
 │ └── error_handlers.lua # Error responses
 ├── controllers/ # Business logic
@@ -59,6 +64,10 @@ cd LuaW
 │ ├── logger.lua # Request logging
 │ ├── parser.lua # Request parsing
 │ └── auth.lua # JWT verification middleware
+├── workers/ # Worker functions
+│ ├── manager.lua # Worker manager
+│ ├── shared.lua # Shared code for worker
+│ └── task.lua # Task execution
 ├── luaw.lua # Entry point
 ```
 ## Getting Started
@@ -135,6 +144,7 @@ The workers.manager module allows you to define and send tasks to workers. A tas
 - A callback function executed on the main server after the task completes.
 
 Example:
+
 ```lua
 local manager = require('workers.manager')
 
@@ -160,6 +170,56 @@ The second function is called on the main server with the result of the first fu
 
 You can find a usage example of this worker system in: `controllers/worker.lua`.
 
+### Cron Jobs Support
+
+LuaW now supports scheduled tasks (cron jobs), allowing you to execute Lua functions at specific times asynchronously.
+
+Jobs are serialized and stored as files in the cron_tasks/ directory. At the defined time, LuaW will execute these functions automatically.
+
+#### Adding a Cron Job
+
+```lua
+local cron = require("utils.cron")
+
+local uuid = cron.add_job("2025-06-20T02:30:00", function()
+  print("Scheduled task executed!")
+end)
+```
+
+- `run_date`: An ISO 8601 string representing the scheduled execution time (e.g., "2025-06-20T02:30:00").
+- `fun`: A Lua function to be executed.
+
+Returns a unique UUID to identify the task.
+
+If the date is missing or invalid, a warning will be logged using the logger middleware.
+
+#### Removing a Cron Job
+
+```lua
+local success = cron.remove_job("cron_tasks/DATE|UUID")
+```
+
+#### Listing Scheduled Jobs
+
+```lua
+local jobs = cron.get_jobs()
+for _, job in ipairs(jobs) do
+  print(job.uuid, job.run_date)
+end
+```
+
+Each job includes:
+- `uuid`: Unique task identifier
+- `run_date`: Scheduled execution date
+- `file_name` / `file_path`: File containing the serialized Lua function
+
+#### Benefits
+
+- Run tasks at a specific time (e.g., cleanup, backups, reports)
+- Lightweight file-based system
+- Compatible with the worker system to offload execution
+- Easily extendable (e.g., recurring jobs, validations)
+
 ## Inspiration
 
 This project takes inspiration from Deno's approach to backend development:
@@ -167,4 +227,4 @@ This project takes inspiration from Deno's approach to backend development:
 - Minimal setup required
 - Standard library approach
 - Simple module system
-- Built-in support for common needs (JSON, JWT)
+- Built-in support for common needs (JSON, JWT, Worker, Date, Cron)
