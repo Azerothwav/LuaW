@@ -4,9 +4,12 @@ local config = require("initiers.config")
 local init_server = require("initiers.server")
 local logger = require("middlewares.logger")
 
+require("handlers.cron")
+
 require("controllers.test")
 require("controllers.auth")
 require("controllers.file")
+require("controllers.cron")
 
 config.parse_args()
 logger.init()

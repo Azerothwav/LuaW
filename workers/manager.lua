@@ -55,7 +55,9 @@ end)
 
 copas.addthread(function()
   while true do
-    logger.info('Searching tasks, ' .. #workers .. ' workers available')
+    if config.debug() then
+      logger.info('Searching tasks, ' .. #workers .. ' workers available')
+    end
     for k, v in pairs(tasks) do
       if not v.handled then
         logger.info('Handling task : ' .. k)
