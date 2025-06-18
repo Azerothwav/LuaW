@@ -32,6 +32,23 @@ parsers.json_response = function(status, data)
   )
 end
 
+parsers.redirect_response = function(status, redirect_url)
+  return string.format(
+    "HTTP/1.1 %d %s\r\n"
+    .. "Location: %s\r\n"
+    .. "Content-Type: text/plain\r\n"
+    .. "Content-Length: %d\r\n"
+    .. "Connection: close\r\n"
+    .. "\r\n"
+    .. "Redirect to: %s",
+    status,
+    parsers.get_status_message(status),
+    redirect_url,
+    #("Redirect to: " .. redirect_url),
+    redirect_url
+  )
+end
+
 parsers.query = function(query)
   local params = {}
   if not query then

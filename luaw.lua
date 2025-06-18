@@ -10,6 +10,7 @@ require("controllers.test")
 require("controllers.auth")
 require("controllers.file")
 require("controllers.cron")
+require("controllers.short_url")
 
 config.parse_args()
 logger.init()
