@@ -2,6 +2,7 @@ local copas = require("copas")
 local parser = require("utils.parser")
 local router = require("handlers.router")
 local config = require("initiers.config")
+local verify_args = require("utils.verify_args")
 
 local shorter_urls = {}
 
@@ -15,6 +16,11 @@ local generate_uuid = function()
 end
 
 router.add_route("POST", "/new_url", function(client, request)
+  verify_args(client, {
+    value = request.params.url,
+    type = "string"
+  })
+
   local url_to_short = request.params.url
   local new_uuid = generate_uuid()
   shorter_urls[new_uuid] = url_to_short
