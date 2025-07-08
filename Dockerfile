@@ -22,7 +22,8 @@ RUN curl -L -O https://luarocks.org/releases/luarocks-3.9.2.tar.gz && \
 RUN luarocks install copas && \
     luarocks install luasec && \
     luarocks install luasocket && \
-    luarocks install luaossl
+    luarocks install luaossl && \
+    luarocks install luafilesystem
 
 WORKDIR /app
 
