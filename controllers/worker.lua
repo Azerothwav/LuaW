@@ -1,7 +1,6 @@
 local copas = require('copas')
 local parser = require('utils.parser')
 local router = require('handlers.router')
-local json = require('json')
 local manager = require('workers.manager')
 
 --[[

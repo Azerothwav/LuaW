@@ -1,5 +1,4 @@
 local jwt = require('libs.jwt')
-local json = require('libs.json')
 local error_handler = require('handlers.errors')
 local copas = require('copas')
 local router = require('handlers.router')
