@@ -105,6 +105,12 @@ curl -X POST -H "Content-Type: application/json" -d '{"username":"admin","passwo
 curl -H "Authorization: Bearer YOUR_TOKEN" http://localhost:8080/auth
 ```
 
+### Hot Reloading for Controllers
+
+LuaW now supports hot-reloading for controllers. This means any changes made to your controller files will be automatically detected and reloaded by the server without requiring a manual restart.
+
+This feature enhances the development experience by allowing faster iteration and testing of route logic on the fly. Simply save your changes, and LuaW will handle the rest.
+
 ### Dynamic Route Patterns
 
 You can now define routes with dynamic segments like /files/:file_name or /users/:id.
