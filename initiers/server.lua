@@ -39,19 +39,15 @@ end
 
 local function run(server)
    copas.addserver(server, function(client)
-      copas.setErrorHandler(function(err)
-         logger.error('Client handler: ' .. tostring(err))
-         if client then
-            client:close()
-         end
-      end)
-
       require('handlers.router').handle(client)
    end)
 
+   copas.setErrorHandler(function(err)
+      logger.error('Client handler: ' .. tostring(err))
+   end)
+
    while true do
-      copas.step(0.1)
-      socket.sleep(0.01)
+      copas.step()
    end
 end
 

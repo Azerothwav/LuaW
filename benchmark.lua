@@ -3,7 +3,7 @@ local socket = require('socket')
 local http = require('copas.http')
 local config = require('initiers.config')
 
-local RPS = 5
+local RPS = 30
 local DURATION = 10
 
 local HOST = config.host()

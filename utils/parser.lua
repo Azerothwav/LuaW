@@ -44,9 +44,16 @@ end
 
 parsers.headers = function(client)
    local headers = {}
+   copas.settimeout(client, 10)
    while true do
       local line, err = copas.receive(client)
-      if not line or line == '' or err then
+      if err then
+         break
+      end
+      if line == '' then
+         break
+      end
+      if not line then
          break
       end
       local key, value = line:match('^([%w-]+):%s*(.+)')
@@ -66,6 +73,8 @@ parsers.read_post_body = function(client, headers)
    local body_chunks = {}
    local received = 0
    local chunk_size = 4096
+
+   copas.settimeout(client, 10)
 
    while received < content_length do
       local to_read = math.min(chunk_size, content_length - received)
