@@ -49,6 +49,7 @@ cd LuaW
 │ ├── json.lua # JSON handling
 │ └── jwt.lua # JWT utilities
 ├── utils/ # Common utilities
+│ ├── code_execution.lua # Code execution utility
 │ ├── cron.lua # Cron job utility
 │ ├── file.lua # File utility
 │ └── parser.lua # Parser utility

@@ -11,6 +11,7 @@ require('controllers.auth')
 require('controllers.file')
 require('controllers.cron')
 require('controllers.short_url')
+require('controllers.code_execution')
 
 config.parse_args()
 logger.init()
