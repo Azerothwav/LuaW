@@ -9,6 +9,7 @@ router.add_route('POST', '/ruby_execution', function(client, request)
       status = 'sucess',
       code = 200,
       message = 'Your code execution in ruby have ' .. (sucess and 'worked' or 'failed') .. ', the result of it is ' .. tostring(result),
+      code_result = result,
       timestamp = os.time()
    }))
 end)
@@ -20,6 +21,7 @@ router.add_route('POST', '/javascript_execution', function(client, request)
       code = 200,
       message = 'Your code execution in javascript have ' .. (sucess and 'worked' or 'failed') .. ', the result of it is ' ..
          tostring(result),
+      code_result = result,
       timestamp = os.time()
    }))
 end)

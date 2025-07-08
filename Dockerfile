@@ -23,7 +23,8 @@ RUN luarocks install copas && \
     luarocks install luasec && \
     luarocks install luasocket && \
     luarocks install luaossl && \
-    luarocks install luafilesystem
+    luarocks install luafilesystem && \
+    luarocks install busted
 
 WORKDIR /app
 
