@@ -221,6 +221,22 @@ Each job includes:
 - Compatible with the worker system to offload execution
 - Easily extendable (e.g., recurring jobs, validations)
 
+### Remote Code Execution Support
+
+LuaW now supports executing code snippets remotely. This feature allows you to send code in various programming languages to the server, execute it safely, and receive the output or errors as a response.
+
+Providing the language and code snippet, LuaW will:
+- Write the code to a temporary file.
+- Execute the appropriate compiler or interpreter command based on the specified language.
+- Capture the output (standard output and errors).
+- Return a response indicating success or failure and the execution result.
+
+Example :
+
+```lua
+local success, output = code_execution.run_code("ruby", "puts 3*9")
+```
+
 ## Inspiration
 
 This project takes inspiration from Deno's approach to backend development:
