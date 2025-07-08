@@ -5,6 +5,7 @@ local init_server = require('initiers.server')
 local logger = require('middlewares.logger')
 
 require('handlers.cron')
+require('handlers.hot-reload')
 
 require('controllers.test')
 require('controllers.auth')
