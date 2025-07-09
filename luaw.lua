@@ -13,6 +13,7 @@ require('controllers.file')
 require('controllers.cron')
 require('controllers.short_url')
 require('controllers.code_execution')
+require('controllers.database')
 
 config.parse_args()
 logger.init()

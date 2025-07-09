@@ -23,7 +23,10 @@ local function reload_file_if_changed(path)
       if attr.modification > (watched_files[path].last_modified or 0) then
          logger.info(string.format('Hot-Reload of %s', path))
          watched_files[path].last_modified = attr.modification
-         dofile(path)
+         local ok, result = pcall(dofile, path)
+         if not ok then
+            logger.error(string.format('Error while reloading %s %s', path, result))
+         end
       end
    else
       logger.error(string.format('File not available %s', path))

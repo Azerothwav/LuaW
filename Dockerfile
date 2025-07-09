@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     ca-certificates \
+    default-libmysqlclient-dev \
     && apt-get clean
 
 RUN curl -L -O https://luarocks.org/releases/luarocks-3.9.2.tar.gz && \
@@ -19,12 +20,13 @@ RUN curl -L -O https://luarocks.org/releases/luarocks-3.9.2.tar.gz && \
     make install && \
     cd .. && rm -rf luarocks-3.9.2*
 
-RUN luarocks install copas && \
-    luarocks install luasec && \
+RUN luarocks install luasec && \
+    luarocks install copas && \
     luarocks install luasocket && \
     luarocks install luaossl && \
     luarocks install luafilesystem && \
-    luarocks install busted
+    luarocks install busted && \
+    luarocks install luasql-mysql MYSQL_INCDIR=/usr/include/mysql
 
 WORKDIR /app
 
