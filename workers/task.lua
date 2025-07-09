@@ -14,7 +14,7 @@ local function connect_to_host()
 
    local bodyStr = json.encode(body)
 
-   local response, status = http.request({
+   local response, _ = http.request({
       method = 'POST',
       url = 'http://' .. config.worker_host() .. ':' .. config.worker_port() .. '/new_worker',
       headers = { ['content-type'] = 'application/json', ['content-length'] = tostring(#bodyStr) },
@@ -38,6 +38,11 @@ task.connect_to_host = function()
          copas.sleep(2)
 
          ok, have_connect = pcall(connect_to_host)
+         if not ok then
+            logger.error('Worker can\'t connect to host properly')
+            os.exit(1)
+            return
+         end
       end
       logger.info('Worker connected to host, waiting for task')
       task.worker_connected = true

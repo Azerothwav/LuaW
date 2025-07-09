@@ -18,6 +18,7 @@ router.add_route('GET', '/database', function(client, request)
          status = 'sucess',
          code = 200,
          message = result and string.format('UUID(s) of %s : %s', request.params.name, table.concat(uuids, ', ')) or 'No result',
+         uuids = uuids,
          timestamp = os.time()
       }))
    end)

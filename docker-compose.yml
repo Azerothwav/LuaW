@@ -16,7 +16,26 @@ services:
       - .:/app
     ports:
       - "9000:8080"
-    entrypoint: ["lua5.3", "luaw.lua"]
+    command: ["lua5.3", "luaw.lua"]
+    entrypoint: []
+    networks:
+      - app-network
+
+  luaw-tests:
+    build: .
+    container_name: luaw-tests
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      DB_NAME: mydatabase
+    volumes:
+      - .:/app
+    command: ["busted", "tests/", "--pattern=.lua"]
+    entrypoint: []
     networks:
       - app-network
 

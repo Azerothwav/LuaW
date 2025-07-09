@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     git \
     ca-certificates \
     default-libmysqlclient-dev \
+    procps \
     && apt-get clean
 
 RUN curl -L -O https://luarocks.org/releases/luarocks-3.9.2.tar.gz && \
@@ -32,4 +33,4 @@ WORKDIR /app
 
 COPY . .
 
-ENTRYPOINT ["lua5.3", "luaw.lua"]
+CMD ["lua5.3", "luaw.lua"]

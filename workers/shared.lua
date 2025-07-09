@@ -4,7 +4,7 @@ local copas = require('copas')
 local parser = require('utils.parser')
 local http = require('copas.http')
 
-router.add_route('GET', '/heartbeat', function(client, request)
+router.add_route('GET', '/heartbeat', function(client)
    copas.send(client, parser.json_response(200, {
       status = 'sucess',
       code = 200,

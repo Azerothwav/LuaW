@@ -36,7 +36,45 @@ connect.execute = function(sql_statement, callback)
       end
    end
 
-   callback(sql_utility.rows(connection, sql_statement))
+   if callback then
+      callback(sql_utility.rows(connection, sql_statement))
+   end
+
+   close_environment()
+end
+
+connect.insert = function(sql_statement, callback)
+   if environment == nil or connection == nil then
+      local ok, _ = pcall(create_environment)
+      if not ok then
+         return
+      end
+   end
+
+   local affected_row, err = connection:execute(sql_statement)
+   assert(affected_row, string.format('Error with the following sql statement: %s\n%s', sql_statement, err))
+
+   if callback then
+      callback(connection:getlastautoid())
+   end
+
+   close_environment()
+end
+
+connect.delete = function(sql_statement, callback)
+   if environment == nil or connection == nil then
+      local ok, _ = pcall(create_environment)
+      if not ok then
+         return
+      end
+   end
+
+   local affected_row, err = connection:execute(sql_statement)
+   assert(affected_row, string.format('Error with the following sql statement: %s\n%s', sql_statement, err))
+
+   if callback then
+      callback(affected_row)
+   end
 
    close_environment()
 end
