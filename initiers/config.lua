@@ -7,6 +7,7 @@ local config = {
    end,
    files_path = './uploads', -- Example : /home/azeroth/Documents/LuaW/uploads
    worker_mode = false,
+   manager_mode = false,
    worker_host = nil,
    worker_port = nil
 }
@@ -21,6 +22,8 @@ local function parse_args()
          config.debug = true
       elseif arg:find('--worker_mode') then
          config.worker_mode = true
+      elseif arg:find('--manager_mode') then
+         config.manager_mode = true
       elseif arg:find('--worker_host=') then
          config.worker_host = arg:match('--worker_host=(.+)')
       elseif arg:find('--worker_port=') then
@@ -58,10 +61,13 @@ return {
    worker_mode = function()
       return config.worker_mode
    end,
+   manager_mode = function()
+      return config.manager_mode
+   end,
    worker_host = function()
-      return config.worker_host
+      return config.worker_host or '0.0.0.0'
    end,
    worker_port = function()
-      return config.worker_port
+      return config.worker_port or 9000
    end
 }

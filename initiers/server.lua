@@ -34,6 +34,22 @@ local function create_server()
    end
 
    server:settimeout(0)
+
+   if config.worker_mode() then
+      require('workers.shared')
+      require('workers.task')
+      print(string.format('Worker launched on http://%s:%d', config.host(), config.port()))
+      print(string.format('Configuration of manager on http://%s:%s', config.worker_host(), config.worker_port()))
+   elseif config.manager_mode() then
+      require('workers.manager')
+      require('controllers.worker')
+      print(string.format('Manager server HTTP launched on http://%s:%d', config.host(), config.port()))
+   else
+      print(string.format('Server HTTP launched on http://%s:%d', config.host(), config.port()))
+   end
+
+   print('\nPress Ctrl+C to stop\n')
+
    return server
 end
 

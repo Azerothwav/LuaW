@@ -8,7 +8,9 @@ logger.init = function()
 end
 
 logger.info = function(message)
-   print(string.format('[%s] INFO: %s', os.date('%Y-%m-%d %H:%M:%S'), message))
+   if config.debug() then
+      print(string.format('[%s] INFO: %s', os.date('%Y-%m-%d %H:%M:%S'), message))
+   end
 end
 
 logger.warn = function(message)
