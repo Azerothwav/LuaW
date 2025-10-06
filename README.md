@@ -17,29 +17,50 @@ A lightweight HTTP server implementation in Lua inspired by Deno's simplicity, u
 - Local file storage support
 - Distributed worker system
 - Cron jobs system
+- Simple server-side HTML page generation
 
 ## Prerequisites
 
 - Lua 5.1+ or LuaJIT
 - Luarocks package manager
 
-## Installation
-```bash
+### Installation & Setup
+
+LuaW can be installed manually using Lua + Luarocks, or via Docker for a fully isolated environment.
+
+#### Manual Installation
+
+Requirements :
+
+- Lua 5.1+ (Lua 5.3 recommended).
+- Luarocks package manager.
+- OpenSSL development libraries.
+
+##### Install Dependencies
+
+```
 luarocks install luasocket
 luarocks install copas
-luarocks install luasec # For JWT support
+luarocks install luasec
+luarocks install luaossl
+luarocks install luafilesystem
+luarocks install lustache
+luarocks install luasql-mysql
 ```
 
-## Clone the repository
-```bash
-git clone https://github.com/Azerothwav/LuaW.git
-cd LuaW
+#### Docker Installation
+
+```
+docker compose build
+docker compose up
 ```
 
 ## Project structure
+
 ```bash
 .
 ├── uploads/ # Upload folder
+├── views/ # Page views folder
 ├── cron_tasks/ # Cron tasks folder
 ├── inits/ # Initialization files
 │ ├── config.lua # Configuration loader
@@ -52,6 +73,7 @@ cd LuaW
 │ ├── code_execution.lua # Code execution utility
 │ ├── cron.lua # Cron job utility
 │ ├── file.lua # File utility
+│ ├── renderer.lua # Page renderer utility
 │ └── parser.lua # Parser utility
 ├── handlers/ # Request handlers
 | ├── cron.lua # Cron manager
@@ -69,8 +91,9 @@ cd LuaW
 │ ├── manager.lua # Worker manager
 │ ├── shared.lua # Shared code for worker
 │ └── task.lua # Task execution
-├── luaw.lua # Entry point
+└── luaw.lua # Entry point
 ```
+
 ## Getting Started
 
 Starting a server with default setting :
@@ -85,6 +108,7 @@ Available options:
 - --debug: Enable debug mode
 
 Exemple :
+
 ```bash
 lua luaw.lua --server=0.0.0.0 --port=8080 --debug=true
 ```
@@ -92,11 +116,13 @@ lua luaw.lua --server=0.0.0.0 --port=8080 --debug=true
 ### Testing your server
 
 A starter controller is already implemented, it have the endpoint /test, here how to test it :
+
 ```bash
 curl "http://localhost:8080/test?name=Backend
 ```
 
 JWT authentication example:
+
 ```bash
 # Get a token
 curl -X POST -H "Content-Type: application/json" -d '{"username":"admin","password":"secret"}' http://localhost:8080/login
@@ -242,6 +268,42 @@ Example :
 ```lua
 local success, output = code_execution.run_code("ruby", "puts 3*9")
 ```
+
+### Web Page Rendering with Luastache
+
+LuaW now includes built-in support for server-side HTML page generation using Luastache, a Lua implementation of the Mustache templating engine.
+
+This allows you to create dynamic web pages easily, similar to Deno’s built-in rendering features.
+
+Example :
+
+```lua
+router.add_route('GET', '/page', function(client, request)
+  local renderer = require('libs.renderer')
+  local parser = require('utils.parser')
+
+  local html = renderer.render('page.html', { title = 'Page' })
+
+  copas.send(client, parser.html_response(200, html))
+end)
+```
+
+#### Folder Structure
+
+All your HTML templates should be stored in the views/ folder:
+
+```
+views/
+├── page.html
+└── layout.html
+```
+
+#### Benefits
+
+- Lightweight and dependency-free HTML rendering.
+- Clean separation of logic and presentation.
+- Reusable layouts and partials.
+- Perfect for small dashboards, admin panels, or documentation pages.
 
 ## Inspiration
 
