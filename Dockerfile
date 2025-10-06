@@ -27,6 +27,7 @@ RUN luarocks install luasec && \
     luarocks install luaossl && \
     luarocks install luafilesystem && \
     luarocks install busted && \
+    luarocks install lustache && \
     luarocks install luasql-mysql MYSQL_INCDIR=/usr/include/mysql
 
 WORKDIR /app

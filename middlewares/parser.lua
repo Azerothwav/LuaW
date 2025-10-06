@@ -5,6 +5,23 @@ local json = require('libs.json')
 
 local parser = {}
 
+local function is_mobile(user_agent)
+   if not user_agent then
+      return false
+   end
+
+   user_agent = user_agent:lower()
+   local keywords = { 'iphone', 'ipad', 'android', 'mobile', 'tablet' }
+
+   for _, keyword in ipairs(keywords) do
+      if user_agent:find(keyword) then
+         return true
+      end
+   end
+
+   return false
+end
+
 parser.request = function(client)
    local request_line, error = copas.receive(client)
    if error then
@@ -45,6 +62,8 @@ parser.request = function(client)
          end
       end
    end
+
+   params.is_mobile = is_mobile(headers['user-agent'])
 
    return {
       method = method,

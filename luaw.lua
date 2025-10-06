@@ -14,6 +14,7 @@ require('controllers.cron')
 require('controllers.short_url')
 require('controllers.code_execution')
 require('controllers.database')
+require('controllers.page')
 
 config.parse_args()
 logger.init()

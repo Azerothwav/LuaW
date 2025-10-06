@@ -1,6 +1,7 @@
 local url = require('socket.url')
 local copas = require('copas')
 local json = require('json')
+local logger = require('middlewares.logger')
 local parsers = {}
 
 parsers.get_status_message = function(status_code)
@@ -17,17 +18,39 @@ parsers.get_status_message = function(status_code)
    return status_messages[status_code] or 'Unknown Status'
 end
 
+parsers.response = function(status, body, headers)
+   headers = headers or {}
+
+   headers['Content-Length'] = #body
+   headers['Connection'] = headers['Connection'] or 'close'
+
+   local response = string.format('HTTP/1.1 %d %s\r\n', status, parsers.get_status_message(status))
+
+   for k, v in pairs(headers) do
+      response = response .. string.format('%s: %s\r\n', k, v)
+   end
+
+   response = response .. '\r\n' .. body
+   return response
+end
+
 parsers.json_response = function(status, data)
    local json_body = json.encode(data)
-   return string.format(
-             'HTTP/1.1 %d %s\r\n' .. 'Content-Type: application/json\r\n' .. 'Content-Length: %d\r\n' .. 'Connection: close\r\n' .. '\r\n%s',
-             status, parsers.get_status_message(status), #json_body, json_body)
+   return parsers.response(status, json_body, { ['Content-Type'] = 'application/json' })
+end
+
+parsers.html_response = function(status, html)
+   local html_size = #html / 1024
+   logger.info(string.format('HTML Size : %s KB', html_size))
+   return parsers.response(status, html, { ['Content-Type'] = 'text/html; charset=UTF-8' })
 end
 
 parsers.redirect_response = function(status, redirect_url)
-   return string.format('HTTP/1.1 %d %s\r\n' .. 'Location: %s\r\n' .. 'Content-Type: text/plain\r\n' .. 'Content-Length: %d\r\n' ..
-                           'Connection: close\r\n' .. '\r\n' .. 'Redirect to: %s', status, parsers.get_status_message(status), redirect_url,
-                        #('Redirect to: ' .. redirect_url), redirect_url)
+   local body = 'Redirect to: ' .. redirect_url
+   return parsers.response(status, body, {
+      ['Content-Type'] = 'text/plain',
+      ['Location'] = redirect_url
+   })
 end
 
 parsers.query = function(query)

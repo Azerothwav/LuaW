@@ -53,4 +53,39 @@ files.list = function(text)
    end
 end
 
+files.file_exists = function(path)
+   local f = io.open(path, 'r')
+   if f then
+      f:close()
+      return true
+   end
+   return false
+end
+
+files.get_view = function(view_name)
+   local path = 'views/' .. view_name
+   local file = io.open(path, 'rb')
+   if not file then
+      return nil, 'File not found'
+   end
+
+   local content = file:read('*all')
+   file:close()
+
+   return content
+end
+
+files.get_static = function(static_file_name)
+   local path = 'static/' .. static_file_name
+   local file = io.open(path, 'rb')
+   if not file then
+      return nil, 'File not found'
+   end
+
+   local content = file:read('*all')
+   file:close()
+
+   return content
+end
+
 return files
