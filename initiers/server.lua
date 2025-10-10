@@ -2,6 +2,7 @@ local socket = require('socket')
 local copas = require('copas')
 local config = require('initiers.config')
 local logger = require('middlewares.logger')
+local router = require('handlers.router')
 
 local function package_verify()
    local packages = { 'socket', 'copas' }
@@ -55,7 +56,7 @@ end
 
 local function run(server)
    copas.addserver(server, function(client)
-      require('handlers.router').handle(client)
+      router.handle(client)
    end)
 
    copas.setErrorHandler(function(err)

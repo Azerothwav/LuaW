@@ -192,4 +192,35 @@ parsers.parse_multipart = function(body, boundary)
    return params, files
 end
 
+parsers.static_response = function(client, request)
+   local file_path = '.' .. request.params.static_path
+   local f = io.open(file_path, 'rb')
+   if not f then
+      return string.format('Static file not found %s', file_path)
+   end
+
+   local content = f:read('*a')
+   f:close()
+
+   local ext = file_path:match('%.([^%.]+)$')
+   local mime_types = {
+      png = 'image/png',
+      jpg = 'image/jpeg',
+      jpeg = 'image/jpeg',
+      gif = 'image/gif',
+      svg = 'image/svg+xml',
+      css = 'text/css',
+      js = 'application/javascript',
+      woff = 'font/woff',
+      woff2 = 'font/woff2',
+      ttf = 'font/ttf',
+      otf = 'font/otf',
+      ico = 'image/x-icon'
+   }
+   local mime = mime_types[ext] or 'application/octet-stream'
+
+   logger.info(string.format('Serving static file: %s (%s, %.2f KB)', file_path, mime, #content / 1024))
+   copas.send(client, parsers.response(200, content, { ['Content-Type'] = mime }))
+end
+
 return parsers

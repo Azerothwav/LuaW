@@ -1,3 +1,7 @@
+if package.loaded[...] then
+   return package.loaded[...]
+end
+
 local logger = require('middlewares.logger')
 local parser = require('middlewares.parser')
 local error_handler = require('handlers.errors')
@@ -34,6 +38,10 @@ router.add_route = function(method, route_name, ...)
 end
 
 local function find_matching_route(method, path)
+   if method == 'GET' and string.find(path, '/static/') then
+      return { handlers = { parser_util.static_response }, params = { static_path = path } }
+   end
+
    if not routes[method] then
       return nil
    end
