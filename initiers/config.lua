@@ -1,3 +1,5 @@
+local socket = require('socket')
+
 local config = {
    host = '0.0.0.0',
    port = 8080,
@@ -48,7 +50,9 @@ end
 return {
    parse_args = parse_args,
    host = function()
-      return config.host
+      local hostname = socket.dns.gethostname()
+      local ip, resolved = socket.dns.toip(hostname)
+      return ip or config.host
    end,
    port = function()
       return config.port
