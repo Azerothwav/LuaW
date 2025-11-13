@@ -15,6 +15,7 @@ require('controllers.short_url')
 require('controllers.code_execution')
 require('controllers.database')
 require('controllers.page')
+require('controllers.image_preview')
 
 config.parse_args()
 logger.init()

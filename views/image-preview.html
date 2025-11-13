@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{image_name}}</title>
+
+    <meta property="og:title" content="This image is hosted with LuaW" />
+    <meta property="og:description" content="Preview of the image" />
+    <meta property="og:image" content="{{host}}/static/images/{{image_name}}" />
+    <meta property="og:url" content="{{host}}/image_preview/{{image_name}}" />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <img src="/static/images/{{image_name}}" alt="Preview" />
+  </body>
+</html>

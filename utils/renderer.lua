@@ -23,4 +23,13 @@ function Renderer.render(name, context)
    return lustache:render(layout, context)
 end
 
+function Renderer.raw_render(name, context)
+   local template = Renderer.load_template(name)
+   if not template then
+      error('Template not found: ' .. name)
+   end
+
+   return lustache:render(template, context or {})
+end
+
 return Renderer
