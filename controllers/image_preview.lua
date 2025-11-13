@@ -22,7 +22,7 @@ router.add_route('GET', '/image_preview/:image_name', function(client, request)
    else
       local html = renderer.raw_render('image-preview.html', {
          image_name = request.params.image_name,
-         host = string.format('%s:%s', config.host(), config.port())
+         host = string.format('%s:%s', config.real_host(), config.port())
       })
 
       copas.send(client, parser.html_response(200, html))

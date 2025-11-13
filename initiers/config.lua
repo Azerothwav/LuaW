@@ -2,6 +2,7 @@ local socket = require('socket')
 
 local config = {
    host = '0.0.0.0',
+   real_host = nil,
    port = 8080,
    debug = false,
    jwt_secret = function()
@@ -13,6 +14,13 @@ local config = {
    worker_host = nil,
    worker_port = nil
 }
+
+local https = require('ssl.https')
+local body, code = https.request('https://api.ipify.org')
+
+if code == 200 then
+   config.real_host = body
+end
 
 local function parse_args()
    for _, arg in ipairs(arg) do
@@ -50,9 +58,10 @@ end
 return {
    parse_args = parse_args,
    host = function()
-      local hostname = socket.dns.gethostname()
-      local ip, resolved = socket.dns.toip(hostname)
       return ip or config.host
+   end,
+   real_host = function()
+      return config.real_host or config.host
    end,
    port = function()
       return config.port
