@@ -8,13 +8,14 @@ function Renderer.load_template(view_name)
 end
 
 function Renderer.render(name, context)
+   context = context or {}
    local layout = Renderer.load_template('layout.html')
    local template = Renderer.load_template(name)
    if not template then
       error('Template not found: ' .. name)
    end
 
-   local body = lustache:render(template, context or {})
+   local body = lustache:render(template, context)
    context.body = body
 
    local tailwind_css = file.get_static('css/tailwind.css') or ''

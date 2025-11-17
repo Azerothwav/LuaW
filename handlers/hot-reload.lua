@@ -55,6 +55,6 @@ copas.addthread(function()
          reload_file_if_changed(file)
       end
 
-      copas.sleep(5)
+      copas.sleep(1)
    end
 end)

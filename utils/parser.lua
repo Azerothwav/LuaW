@@ -34,23 +34,34 @@ parsers.response = function(status, body, headers)
    return response
 end
 
-parsers.json_response = function(status, data)
+parsers.json_response = function(status, data, headers)
    local json_body = json.encode(data)
-   return parsers.response(status, json_body, { ['Content-Type'] = 'application/json' })
+
+   headers = headers or {}
+   headers['Content-Type'] = 'application/json'
+
+   return parsers.response(status, json_body, headers)
 end
 
-parsers.html_response = function(status, html)
+parsers.html_response = function(status, html, headers)
    local html_size = #html / 1024
    logger.info(string.format('HTML Size : %s KB', html_size))
-   return parsers.response(status, html, { ['Content-Type'] = 'text/html; charset=UTF-8' })
+
+   headers = headers or {}
+   headers['Content-Type'] = 'text/html; charset=UTF-8'
+
+   return parsers.response(status, html, headers)
 end
 
-parsers.redirect_response = function(status, redirect_url)
+parsers.redirect_response = function(status, redirect_url, headers)
    local body = 'Redirect to: ' .. redirect_url
-   return parsers.response(status, body, {
-      ['Content-Type'] = 'text/plain',
-      ['Location'] = redirect_url
-   })
+
+   headers = headers or {}
+
+   headers['Content-Type'] = 'text/plain'
+   headers['Location'] = redirect_url
+
+   return parsers.response(status, body, headers)
 end
 
 parsers.query = function(query)
